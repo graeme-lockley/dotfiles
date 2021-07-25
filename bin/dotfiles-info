@@ -10,11 +10,11 @@ echo "Modules:      $DOTFILES_MODULES"
 for module in $DOTFILES_MODULES; do
     INFO_FILE_NAME="$DOTFILES_HOME/modules/$module/info.zsh"
     if [[ -x "$INFO_FILE_NAME" ]]; then
-        info "Running $INFO_FILE_NAME"
+        logging_info "Running $INFO_FILE_NAME"
         $INFO_FILE_NAME
     elif [[ -e "$INFO_FILE_NAME" ]]; then
-        status "$module: $INFO_FILE_NAME exists but is not executable"
+        logging_status "$module: $INFO_FILE_NAME exists but is not executable"
     else
-        info "$module: $INFO_FILE_NAME does not exists"
+        logging_info "$module: $INFO_FILE_NAME does not exists"
     fi
 done

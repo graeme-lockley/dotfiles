@@ -7,11 +7,11 @@ export DOTFILES_VERBOSE=1
 for module in $DOTFILES_MODULES; do
     EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_setup.zsh"
     if [[ -x "$EXEC_FILE_NAME" ]]; then
-        info "Running $EXEC_FILE_NAME"
+        logging_info "Running $EXEC_FILE_NAME"
         $EXEC_FILE_NAME
     elif [[ -e "$EXEC_FILE_NAME" ]]; then
-        status "$module: $EXEC_FILE_NAME exists but is not executable"
+        logging_status "$module: $EXEC_FILE_NAME exists but is not executable"
     else
-        info "$module: $EXEC_FILE_NAME does not exists"
+        logging_info "$module: $EXEC_FILE_NAME does not exists"
     fi
 done

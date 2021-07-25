@@ -2,31 +2,31 @@ export DOTFILES_HOME=~/.dotfiles
 
 export PERSONALITY=home
 
-function info() {
+function logging_info() {
     if [[ "$DOTFILES_VERBOSE" -eq "1" ]]; then
         echo "Info: $*"
     fi
 }
 
-function status() {
+function logging_status() {
     echo "Status: $*"
 }
 
-function error() {
+function logging_error() {
     echo "Error: $*"
     exit 1
 }
 
 DOTFILE_SETTINGS_FILE_NAME="$DOTFILES_HOME/settings/_$(uname -n).zsh"
 if [[ ! -r "$DOTFILE_SETTINGS_FILE_NAME" ]]; then
-    info "Not found: $DOTFILE_SETTINGS_FILE_NAME"
+    logging_info "Not found: $DOTFILE_SETTINGS_FILE_NAME"
 
     DOTFILE_SETTINGS_FILE_NAME="$DOTFILES_HOME/settings/_${PERSONALITY}-setup.zsh"
 
     if [[ ! -r "$DOTFILE_SETTINGS_FILE_NAME" ]]; then
-        error "Not found: $DOTFILE_SETTINGS_FILE_NAME"
+        logging_error "Not found: $DOTFILE_SETTINGS_FILE_NAME"
     fi
 fi
 
-info "Using: $DOTFILE_SETTINGS_FILE_NAME"
+logging_info "Using: $DOTFILE_SETTINGS_FILE_NAME"
 . $DOTFILE_SETTINGS_FILE_NAME
