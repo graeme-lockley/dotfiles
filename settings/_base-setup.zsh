@@ -5,6 +5,7 @@ export DOTFILES_PERSONALITY=home
 export DOTFILES_MODULES=(
     # homebrew
     zsh
+    git
     
     # deno
     # docker
