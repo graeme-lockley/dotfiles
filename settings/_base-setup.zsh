@@ -4,11 +4,11 @@ export DOTFILES_PERSONALITY=home
 export EMAIL_ADDRESS=graeme.lockley@gmail.com
 
 export DOTFILES_MODULES=(
-    # homebrew
     zsh
+    homebrew
     git
-    
-    # deno
+    deno
+
     # docker
     # node
 )
