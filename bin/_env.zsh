@@ -1,4 +1,4 @@
-DOTFILES_HOME=~/.dotfiles
+export DOTFILES_HOME=~/.dotfiles
 
 export PERSONALITY=home
 
