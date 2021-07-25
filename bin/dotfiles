@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+# Verbose levels:
+#   0: silent
+#   1: show working on
+export DOTFILES_VERBOSE=0
+
+. $(dirname $0)/_env.zsh
+
+COMMAND=$1
+
+case "$COMMAND" in
+"setup")
+    shift
+    exec $(dirname $0)/dotfiles-setup $*
+    ;;
+"info")
+    shift
+    exec $(dirname $0)/dotfiles-info $*
+    ;;
+"")
+    exec $(dirname $0)/dotfiles-usage
+    ;;
+*)
+    echo "Error: Unknown command: $COMMAND"
+    echo "Run $0 without any command to see dotfile's usage."
+    ;;
+esac
