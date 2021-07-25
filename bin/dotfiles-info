@@ -8,7 +8,7 @@ echo "Personality:  $DOTFILES_PERSONALITY"
 echo "Modules:      $DOTFILES_MODULES"
 
 for module in $DOTFILES_MODULES; do
-    INFO_FILE_NAME="$DOTFILES_HOME/modules/$module/info.zsh"
+    INFO_FILE_NAME="$DOTFILES_HOME/modules/$module/_info.zsh"
     if [[ -x "$INFO_FILE_NAME" ]]; then
         logging_info "Running $INFO_FILE_NAME"
         $INFO_FILE_NAME
