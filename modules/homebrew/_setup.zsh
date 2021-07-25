@@ -2,7 +2,7 @@
 
 . $DOTFILES_HOME/bin/_env.zsh
 
-if [[ ! $($DOTFILES_HOME/bin/is-executable brew) ]]; then
+if `$DOTFILES_HOME/bin/is-executable brew`; then
     brew update
     brew upgrade
 else
