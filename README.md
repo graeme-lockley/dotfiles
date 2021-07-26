@@ -18,10 +18,9 @@ If you are reading this and you are not me then feel free to copy my long-term m
 - Each machine has a personality - HOME or WORK.  The rationale is these environments are different and require different certificates.
 - Each machine can have different settings.  I know that sounds counter intuitive but, wait, when you need it you'll go "ah - wish I could do that - look at how I hacked it to work"
 - Each installed application is configured separately - called a module in my parlance.
-- `stow` and `brew` to do all of the heavy lifting.
+- `brew` to do all of the heavy lifting.
 
 ## See also
 
-- [Managing dotfiles with GNU stow](https://alexpearce.me/2016/02/managing-dotfiles-with-stow/) really helpful when I forget how to use `stow`
 - [The ZShell Manual](https://zsh.sourceforge.io/Doc/Release/zsh_toc.html) because `zsh` is awesome and powerful and misunderstood - *what do you mean my Ferrari has more than 1 gear - WOW!*
 - [oh my zsh](https://ohmyz.sh) for when I am impatient and I just want it to work
