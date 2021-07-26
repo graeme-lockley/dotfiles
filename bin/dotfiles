@@ -10,13 +10,17 @@ export DOTFILES_VERBOSE=0
 COMMAND=$1
 
 case "$COMMAND" in
+"info")
+    shift
+    exec $(dirname $0)/dotfiles-info $*
+    ;;
 "setup")
     shift
     exec $(dirname $0)/dotfiles-setup $*
     ;;
-"info")
+"update")
     shift
-    exec $(dirname $0)/dotfiles-info $*
+    exec $(dirname $0)/dotfiles-update $*
     ;;
 "")
     exec $(dirname $0)/dotfiles-usage
