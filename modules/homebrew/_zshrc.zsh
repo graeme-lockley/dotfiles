@@ -1,4 +1,4 @@
-if [[ "$(uname -p)" -eq "arm" ]]; then
+if [[ "$(uname -p)" == "arm" ]]; then
     export HOMEBREW_CELLAR=/opt/homebrew/Cellar
     export HOMEBREW_PREFIX=/opt/homebrew
     export HOMEBREW_REPOSITORY=/opt/homebrew
