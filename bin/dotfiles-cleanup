@@ -2,14 +2,28 @@
 
 . $(dirname $0)/_env.zsh
 
-for module in $DOTFILES_MODULES; do
-    EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_cleanup.zsh"
-    if [[ -x "$EXEC_FILE_NAME" ]]; then
-        logging_info "Running $EXEC_FILE_NAME"
-        $EXEC_FILE_NAME
-    elif [[ -e "$EXEC_FILE_NAME" ]]; then
-        logging_status "$module: $EXEC_FILE_NAME exists but is not executable"
-    else
-        logging_info "$module: $EXEC_FILE_NAME does not exists"
+for qualified_module in $DOTFILES_HOME/modules/*
+do
+    module=$(basename $qualified_module)
+    
+    if [[ $DOTFILES_MODULES[(Ie)$module] == 0 ]]
+    then
+        logging_info "cleanup $module"
+        EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_cleanup.zsh"
+        if [[ -x "$EXEC_FILE_NAME" ]]; then
+            logging_info "Running $EXEC_FILE_NAME"
+            $EXEC_FILE_NAME
+        elif [[ -e "$EXEC_FILE_NAME" ]]; then
+            logging_status "$module: $EXEC_FILE_NAME exists but is not executable"
+        else
+            BREWFILE_NAME="$DOTFILES_HOME/modules/$module/Brewfile"
+
+            if [[ -e "$BREWFILE_NAME" ]]; then
+                logging_info "Bundle $BREWFILE_NAME"
+                brew-bundle-delete "$BREWFILE_NAME"
+            else
+                logging_info "$module: Neither $EXEC_FILE_NAME nor $BREWFILE_NAME exists"
+            fi
+        fi
     fi
 done

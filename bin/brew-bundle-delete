@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+echo Brew bundle delete: $*
+
+while [[ "$1" != "" ]]; do
+    awk -f "$DOTFILES_HOME/bin/brew-bundle-delete.awk" "$1"
+
+    shift 1
+done
