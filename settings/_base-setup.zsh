@@ -8,10 +8,10 @@ export DOTFILES_MODULES=(
     homebrew
     git
     deno
-    # llvm
+    node
+    llvm
     "visual studio code"
 
     # docker
-    # node
 )
 

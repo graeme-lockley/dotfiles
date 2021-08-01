@@ -10,16 +10,16 @@ function logging_debug() {
 
 function logging_info() {
     if [[ "$DOTFILES_VERBOSE" -eq "1" || "$DOTFILES_VERBOSE" -eq "2" ]]; then
-        echo "Info: $*"
+        echo "${DOTFILES_GREEN}Info:${DOTFILES_NOCOLOUR} $*"
     fi
 }
 
 function logging_status() {
-    echo "Status: $*"
+    echo "${DOTFILES_GREEN}Status:${DOTFILES_NOCOLOUR} $*"
 }
 
 function logging_error() {
-    echo "Error: $*"
+    echo "${DOTFILES_RED}Error:${DOTFILES_NOCOLOUR} $*"
     exit 1
 }
 
