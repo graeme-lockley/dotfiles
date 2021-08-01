@@ -12,6 +12,13 @@ for module in $DOTFILES_MODULES; do
     elif [[ -e "$EXEC_FILE_NAME" ]]; then
         logging_status "$module: $EXEC_FILE_NAME exists but is not executable"
     else
-        logging_info "$module: $EXEC_FILE_NAME does not exists"
+        BREWFILE_NAME="$DOTFILES_HOME/modules/$module/Brewfile"
+
+        if [[ -e "$BREWFILE_NAME" ]]; then
+            logging_info "Bundle $BREWFILE_NAME"
+            brew bundle --file="$BREWFILE_NAME"
+        else
+            logging_info "$module: Neither $EXEC_FILE_NAME or $BREWFILE_NAME not exists"
+        fi
     fi
 done

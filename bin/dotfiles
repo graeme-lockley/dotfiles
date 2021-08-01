@@ -2,14 +2,19 @@
 
 # Verbose levels:
 #   0: silent
-#   1: show working on
-export DOTFILES_VERBOSE=0
+#   1: show info
+#   2: show debug info
+export DOTFILES_VERBOSE=1
 
 . $(dirname $0)/_env.zsh
 
 COMMAND=$1
 
 case "$COMMAND" in
+"cleanup")
+    shift
+    exec $(dirname $0)/dotfiles-cleanup $*
+    ;;
 "info")
     shift
     exec $(dirname $0)/dotfiles-info $*
@@ -17,10 +22,6 @@ case "$COMMAND" in
 "setup")
     shift
     exec $(dirname $0)/dotfiles-setup $*
-    ;;
-"update")
-    shift
-    exec $(dirname $0)/dotfiles-update $*
     ;;
 "")
     exec $(dirname $0)/dotfiles-usage

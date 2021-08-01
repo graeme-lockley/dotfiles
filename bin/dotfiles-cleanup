@@ -2,10 +2,8 @@
 
 . $(dirname $0)/_env.zsh
 
-export DOTFILES_VERBOSE=1
-
 for module in $DOTFILES_MODULES; do
-    EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_update.zsh"
+    EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_cleanup.zsh"
     if [[ -x "$EXEC_FILE_NAME" ]]; then
         logging_info "Running $EXEC_FILE_NAME"
         $EXEC_FILE_NAME

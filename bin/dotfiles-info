@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-export DOTFILES_VERBOSE=1
+export DOTFILES_VERBOSE=0
 . $(dirname $0)/_env.zsh
 
 echo "Machine name: $(uname -n)"
