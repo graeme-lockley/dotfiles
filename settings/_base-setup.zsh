@@ -6,10 +6,14 @@ export EMAIL_ADDRESS=graeme.lockley@gmail.com
 export DOTFILES_MODULES=(
     zsh
     homebrew
+
+    cmake
     git
+
     deno
     node
     llvm
+
     "visual studio code"
 
     # docker
