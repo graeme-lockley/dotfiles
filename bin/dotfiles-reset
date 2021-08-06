@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+. $(dirname $0)/_env.zsh
+
+export DOTFILES_VERBOSE=1
+
+logging_info "Removing formulas"
+brew uninstall --force `brew list`
+
+logging_info "Removing casks"
+brew uninstall --force `brew list --cask`
+
+
+logging_info "Homebrew cleanup"
+brew cleanup

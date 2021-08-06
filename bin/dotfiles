@@ -23,6 +23,10 @@ case "$COMMAND" in
     shift
     exec $(dirname $0)/dotfiles-setup $*
     ;;
+"reset")
+    shift
+    exec $(dirname $0)/dotfiles-reset $*
+    ;;
 "")
     exec $(dirname $0)/dotfiles-usage
     ;;

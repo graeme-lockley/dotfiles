@@ -18,3 +18,9 @@ dotfiles supports the following commands:
         Runs through all of the possible modules and uninstalls them.  This is
         useful in ensuring that packages installed through dotfiles but not 
         needed are removed in a predictable way.
+
+    reset
+
+        Indiscriminately remove all formulae and casks followed irrespective of
+        whether or not the formula or cask is part of the setup.
+
