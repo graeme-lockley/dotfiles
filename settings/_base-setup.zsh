@@ -7,9 +7,10 @@ export DOTFILES_MODULES=(
     zsh
     homebrew
 
-    cmake
     git
 
+    java
+    
     deno
     node
     llvm

@@ -1,0 +1,6 @@
+tap "adoptopenjdk/openjdk"
+
+brew "gradle"
+brew "maven"
+
+cask "adoptopenjdk"
