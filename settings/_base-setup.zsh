@@ -8,6 +8,7 @@ export DOTFILES_MODULES=(
     homebrew
 
     git
+    entr
 
     java
     
