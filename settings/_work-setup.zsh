@@ -3,5 +3,6 @@
 export DOTFILES_PERSONALITY=work
 
 DOTFILES_MODULES+=(
+    google-chrome
     miro
 )
