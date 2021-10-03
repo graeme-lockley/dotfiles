@@ -18,6 +18,6 @@ export DOTFILES_MODULES=(
 
     "visual studio code"
 
-    # docker
+    docker
 )
 
