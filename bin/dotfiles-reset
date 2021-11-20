@@ -4,6 +4,8 @@
 
 export DOTFILES_VERBOSE=1
 
+dotfiles_verify_settings
+
 logging_info "Removing formulas"
 brew uninstall --force `brew list`
 

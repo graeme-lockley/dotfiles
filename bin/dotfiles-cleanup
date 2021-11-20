@@ -2,6 +2,8 @@
 
 . $(dirname $0)/_env.zsh
 
+dotfiles_verify_settings
+
 for qualified_module in $DOTFILES_HOME/modules/*
 do
     module=$(basename $qualified_module)

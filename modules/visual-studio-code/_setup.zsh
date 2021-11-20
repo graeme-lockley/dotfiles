@@ -2,8 +2,8 @@
 
 . $DOTFILES_HOME/bin/_env.zsh
 
-logging_info "Bundle $DOTFILES_HOME/modules/visual studio code/Brewfile"
-brew bundle --file="$DOTFILES_HOME/modules/visual studio code/Brewfile"
+logging_info "Bundle $DOTFILES_HOME/modules/visual-studio-code/Brewfile"
+brew bundle --file="$DOTFILES_HOME/modules/visual-studio-code/Brewfile"
 
 code --force --install-extension ms-vscode-remote.remote-containers
 code --force --install-extension ms-azuretools.vscode-docker
