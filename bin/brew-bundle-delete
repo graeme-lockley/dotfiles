@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+dotfiles_verify_settings
+
 echo Brew bundle delete: $*
 
 while [[ "$1" != "" ]]; do

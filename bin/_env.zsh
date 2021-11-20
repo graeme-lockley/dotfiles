@@ -23,16 +23,27 @@ function logging_error() {
     exit 1
 }
 
-DOTFILE_SETTINGS_FILE_NAME="$DOTFILES_HOME/settings/_$(uname -n).zsh"
-if [[ ! -r "$DOTFILE_SETTINGS_FILE_NAME" ]]; then
-    logging_debug "Not found: $DOTFILE_SETTINGS_FILE_NAME"
+DOTFILES_SETTINGS_FILE_NAME="$DOTFILES_HOME/settings/_$(uname -n).zsh"
+DOTFILES_SETTINGS_MODE="custom"
+if [[ ! -r "$DOTFILES_SETTINGS_FILE_NAME" ]]; then
+    logging_debug "Not found: $DOTFILES_SETTINGS_FILE_NAME"
 
-    DOTFILE_SETTINGS_FILE_NAME="$DOTFILES_HOME/settings/_${PERSONALITY}-setup.zsh"
+    DOTFILES_SETTINGS_FILE_NAME="$DOTFILES_HOME/settings/_${PERSONALITY}-setup.zsh"
+    DOTFILES_SETTINGS_MODE="personality"
 
-    if [[ ! -r "$DOTFILE_SETTINGS_FILE_NAME" ]]; then
-        logging_debug "Not found: $DOTFILE_SETTINGS_FILE_NAME"
+    if [[ ! -r "$DOTFILES_SETTINGS_FILE_NAME" ]]; then
+        logging_debug "Not found: $DOTFILES_SETTINGS_FILE_NAME"
+        DOTFILES_SETTINGS_MODE="none"
     fi
 fi
 
-logging_debug "Using: $DOTFILE_SETTINGS_FILE_NAME"
-. $DOTFILE_SETTINGS_FILE_NAME
+logging_debug "Using: $DOTFILES_SETTINGS_FILE_NAME"
+. $DOTFILES_SETTINGS_FILE_NAME
+
+function dotfiles_verify_settings() {
+    if [[ "$DOTFILES_SETTINGS_MODE" != "custom" ]]
+    then
+        logging_error "General settings used - create a custom file for this machine: $DOTFILES_HOME/settings/_$(uname -n).zsh"
+        exit 1
+    fi
+}   

@@ -2,6 +2,8 @@
 
 . $(dirname $0)/_env.zsh
 
+dotfiles_verify_settings
+
 export DOTFILES_VERBOSE=1
 
 for module in $DOTFILES_MODULES; do
