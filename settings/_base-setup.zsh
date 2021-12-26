@@ -15,6 +15,7 @@ export DOTFILES_MODULES=(
     deno
     node
     llvm
+    pnpm
     rush
 
     visual-studio-code
