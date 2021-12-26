@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-npm update -g pnpm
+pnpm add -g pnpm
