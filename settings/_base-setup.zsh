@@ -17,7 +17,5 @@ export DOTFILES_MODULES=(
     llvm
 
     visual-studio-code
-
-    docker
 )
 
