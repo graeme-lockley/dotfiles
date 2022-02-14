@@ -2,6 +2,7 @@
 
 DOTFILES_MODULES+=(
     gnu-build-tools
+#    emscripten
     
     graphviz
 )
