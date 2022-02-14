@@ -7,10 +7,13 @@ brew bundle --file="$DOTFILES_HOME/modules/visual-studio-code/Brewfile"
 
 code --force --install-extension ms-vscode-remote.remote-containers
 code --force --install-extension ms-azuretools.vscode-docker
-code --force --install-extension coenraads.bracket-pair-colorizer-2
 code --force --install-extension ionide.ionide-fsharp
 code --force --install-extension foxundermoon.shell-format
 code --force --install-extension streetsidesoftware.code-spell-checker
 
 code --force --install-extension ms-vscode.vscode-typescript-next
 code --force --install-extension rbbit.typescript-hero
+
+code --force --install-extension svelte.svelte-vscode
+
+code --force --install-extension jebbs.plantuml
