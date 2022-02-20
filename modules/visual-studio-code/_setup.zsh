@@ -6,7 +6,10 @@ logging_info "Bundle $DOTFILES_HOME/modules/visual-studio-code/Brewfile"
 brew bundle --file="$DOTFILES_HOME/modules/visual-studio-code/Brewfile"
 
 code --force --install-extension ms-vscode-remote.remote-containers
+code --force --install-extension ms-dotnettools.csharp
 code --force --install-extension ms-azuretools.vscode-docker
+code --force --install-extension ms-azuretools.vscode-azurefunctions
+
 code --force --install-extension ionide.ionide-fsharp
 code --force --install-extension foxundermoon.shell-format
 code --force --install-extension streetsidesoftware.code-spell-checker
