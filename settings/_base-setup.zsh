@@ -17,6 +17,7 @@ export DOTFILES_MODULES=(
     llvm
     pnpm
     rush
+    shellcheck
 
     visual-studio-code
     microsoft-edge
