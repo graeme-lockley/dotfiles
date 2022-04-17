@@ -19,5 +19,6 @@ export DOTFILES_MODULES=(
     rush
 
     visual-studio-code
+    microsoft-edge
 )
 
