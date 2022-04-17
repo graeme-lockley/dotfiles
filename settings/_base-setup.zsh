@@ -15,6 +15,7 @@ export DOTFILES_MODULES=(
     deno
     node
     llvm
+    markdownlint-cli
     pnpm
     rush
     shellcheck
@@ -22,4 +23,3 @@ export DOTFILES_MODULES=(
     visual-studio-code
     microsoft-edge
 )
-
