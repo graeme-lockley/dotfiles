@@ -14,6 +14,8 @@ export DOTFILES_MODULES=(
     
     deno
     node
+
+    better-npm-audit
     llvm
     markdownlint-cli
     pnpm
