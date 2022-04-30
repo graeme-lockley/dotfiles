@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-if `$DOTFILES_HOME/bin/is-executable better-npm-audit`; then
+if `$DOTFILES_HOME/bin/is-executable npm`; then
     if `$DOTFILES_HOME/bin/is-executable better-npm-audit`; then
         npm update -g better-npm-audit
     else
