@@ -20,6 +20,7 @@ export DOTFILES_MODULES=(
     markdownlint-cli
     pnpm
     rush
+    rust-lang
     shellcheck
 
     visual-studio-code

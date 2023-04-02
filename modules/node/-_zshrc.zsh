@@ -3,4 +3,3 @@ if [[ "$(uname -p)" == "arm" ]]; then
 else
     export PATH="/usr/local/opt/node@14/bin:$PATH"
 fi
-
