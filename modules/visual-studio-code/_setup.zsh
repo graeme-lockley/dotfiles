@@ -23,3 +23,4 @@ code --force --install-extension svelte.svelte-vscode
 code --force --install-extension jebbs.plantuml
 
 code --force --install-extension rust-lang.rust-analyzer
+code --force --install-extension denoland.vscode-deno

@@ -17,6 +17,7 @@ export DOTFILES_MODULES=(
 
     better-npm-audit
     llvm
+    littlelanguages
     markdownlint-cli
     pnpm
     rush
