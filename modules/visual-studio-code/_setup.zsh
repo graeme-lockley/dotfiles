@@ -24,3 +24,4 @@ code --force --install-extension jebbs.plantuml
 
 code --force --install-extension rust-lang.rust-analyzer
 code --force --install-extension denoland.vscode-deno
+code --force --install-extension ziglang.vscode-zig

@@ -14,6 +14,7 @@ export DOTFILES_MODULES=(
     
     deno
     node
+    zig
 
     better-npm-audit
     llvm
