@@ -16,7 +16,6 @@ code --force --install-extension foxundermoon.shell-format
 code --force --install-extension streetsidesoftware.code-spell-checker
 
 code --force --install-extension ms-vscode.vscode-typescript-next
-code --force --install-extension rbbit.typescript-hero
 
 code --force --install-extension svelte.svelte-vscode
 
