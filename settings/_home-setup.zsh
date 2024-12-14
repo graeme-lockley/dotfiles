@@ -10,4 +10,6 @@ DOTFILES_MODULES+=(
     
     graphviz
     jtd-codegen
+    rebo-lang
+    bendu-lang
 )
