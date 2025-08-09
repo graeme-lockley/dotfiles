@@ -11,6 +11,8 @@ export DOTFILES_MODULES=(
     entr
 
     java
+
+    chatgpt
     
     deno
     node
