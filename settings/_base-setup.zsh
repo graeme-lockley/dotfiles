@@ -28,4 +28,5 @@ export DOTFILES_MODULES=(
     visual-studio-code
     microsoft-edge
     intellij
+    cursor
 )
