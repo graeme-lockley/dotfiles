@@ -16,6 +16,7 @@ export DOTFILES_MODULES=(
     
     deno
     node
+    uv
     zig
 
     better-npm-audit
