@@ -12,4 +12,5 @@ DOTFILES_MODULES+=(
     rebo-lang
     bendu-lang
     chatgpt
+    ollama
 )
