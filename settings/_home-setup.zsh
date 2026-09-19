@@ -8,6 +8,7 @@ DOTFILES_MODULES+=(
     dotnet-sdk
     azure-tools
     colima
+    docker-compose
     
     jtd-codegen
     rebo-lang
