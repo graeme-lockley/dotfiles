@@ -15,9 +15,6 @@ for module in $DOTFILES_MODULES; do
     fi
 done
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/graemel/.lmstudio/bin"
-
 # Task Master aliases added on 4/18/2025
 alias tm='task-master'
 alias taskmaster='task-master'
