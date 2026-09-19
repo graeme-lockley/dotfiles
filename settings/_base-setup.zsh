@@ -17,15 +17,12 @@ export DOTFILES_MODULES=(
     deno
     node
     uv
-    zig
 
     better-npm-audit
-    llvm
     littlelanguages
     markdownlint-cli
     pnpm
     rush
-    rust-lang
     shellcheck
 
     visual-studio-code

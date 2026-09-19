@@ -8,7 +8,6 @@ DOTFILES_MODULES+=(
     dotnet-sdk
     azure-tools
     
-    graphviz
     jtd-codegen
     rebo-lang
     bendu-lang

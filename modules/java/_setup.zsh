@@ -5,7 +5,6 @@ else
 fi
 
 brew install gradle
-brew install maven
 
 sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
