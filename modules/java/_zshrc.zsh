@@ -1,5 +1,10 @@
-export JAVA_HOME=`/usr/libexec/java_home --version 12`
+typeset -g _java_home_candidate="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
 
-# export PATH="$HOMEBREW_PREFIX/opt/openjdk/bin:$PATH"
+if [[ -d "$_java_home_candidate" ]]; then
+    export JAVA_HOME="$_java_home_candidate"
+else
+    export JAVA_HOME="$(/usr/libexec/java_home 2>/dev/null)"
+fi
 
-# export CPPFLAGS="-I$HOMEBREW_PREFIX=/opt/openjdk/include"
+export PATH="$JAVA_HOME/bin:$PATH"
+unset _java_home_candidate

@@ -1,7 +1,9 @@
 #!/bin/zsh
 
-if `$DOTFILES_HOME/bin/is-executable npm`; then
-    npm install -g npm
+if brew list --formula node >/dev/null 2>&1; then
+    brew upgrade node
 else
-    brew install node@14
+    brew install node
 fi
+
+npm install -g npm
