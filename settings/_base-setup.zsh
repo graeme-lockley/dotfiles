@@ -11,9 +11,12 @@ export DOTFILES_MODULES=(
     entr
 
     java
+
+    chatgpt
     
     deno
     node
+    uv
     zig
 
     better-npm-audit
@@ -28,4 +31,5 @@ export DOTFILES_MODULES=(
     visual-studio-code
     microsoft-edge
     intellij
+    cursor
 )
