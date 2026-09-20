@@ -1,0 +1,30 @@
+#!/bin/zsh
+
+# List installed formulae that nothing declares.
+#
+# `brew list --installed-on-request` is the set of things installed on purpose
+# rather than as a dependency of something else.  Every one of those should be
+# declared in a Brewfile, otherwise a machine rebuilt from these dotfiles would
+# not have it.  Anything printed here is drift.
+#
+# Two directions of drift exist; this is the "installed but undeclared" one.
+# The other ("declared but not installed") is `brew bundle check`.
+
+. $(dirname $0)/_env.zsh
+
+typeset -a declared
+
+for brewfile in $DOTFILES_HOME/modules/*/Brewfile; do
+    [[ -e "$brewfile" ]] || continue
+
+    for entry in ${(f)"$(sed -nE 's/^(brew|cask) "([^"]+)".*/\2/p' $brewfile)"}; do
+        # ${entry:t} drops a tap prefix so someorg/tap/sometool matches sometool
+        declared+=("${entry:t}")
+    done
+done
+
+for leaf in ${(f)"$(brew list --installed-on-request 2>/dev/null)"}; do
+    if (( ! ${declared[(Ie)$leaf]} )); then
+        echo "$leaf"
+    fi
+done

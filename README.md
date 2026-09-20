@@ -20,6 +20,18 @@ If you are reading this and you are not me then feel free to copy my long-term m
 - Each installed application is configured separately - called a module in my parlance.
 - `brew` to do all of the heavy lifting.
 
+## Homebrew
+
+`brew` does all of the heavy lifting, so it gets one rule and one inventory.
+
+- **`modules/homebrew/Brewfile` is the inventory of the machine** - the complete list of what should be installed.  A module owns an application and its config; this file owns the brew state of the machine, so there is exactly one place to diff and exactly one place to check.  Module Brewfiles may repeat entries here; `brew bundle` is idempotent.
+- **Regenerate it from reality** with `brew bundle dump --force --file=~/.dotfiles/modules/homebrew/Brewfile`, then re-apply the lines marked `DECISION` and diff before committing.  The file is a curated snapshot, not something to type from scratch.
+- **Third-party taps must be trusted, or Homebrew 7 ignores them in silence.**  The failure mode is what makes this worth remembering: `brew outdated` simply reports nothing while you sit several versions behind.  Declare it per formula with `, trusted: true` rather than trusting a whole tap, because whole-tap trust also accepts every future formula that tap ever ships.  `brew bundle install` applies trust before it loads any entry, so a rebuilt machine needs no manual `brew trust` step.
+- **`dotfiles info` reports drift in both directions** - declared-but-missing via `brew bundle check`, and installed-but-undeclared via `bin/brew-undeclared`.  Silence from both means the machine matches its declaration.
+- **`dotfiles setup` bundles, upgrades, autoremoves, then prunes.**  `brew cleanup --prune=all -s` is deliberate: a bare `brew cleanup` keeps a cached download for every installed version, which is how the cache quietly reached 8.8GB.
+
+Homebrew refuses to install any formula that has no bottle when the Command Line Tools are older than the OS, because those entries get built from source.  That is a hard gate rather than a warning, and there is no bypass short of updating the tools.  `dotfiles setup` reports it and carries on instead of abandoning the remaining modules.
+
 ## See also
 
 - [The ZShell Manual](https://zsh.sourceforge.io/Doc/Release/zsh_toc.html) because `zsh` is awesome and powerful and misunderstood - *what do you mean my Ferrari has more than 1 gear - WOW!*

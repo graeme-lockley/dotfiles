@@ -8,19 +8,27 @@ export DOTFILES_VERBOSE=1
 
 for module in $DOTFILES_MODULES; do
     EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_setup.zsh"
+    BREWFILE_NAME="$DOTFILES_HOME/modules/$module/Brewfile"
+
     if [[ -x "$EXEC_FILE_NAME" ]]; then
         logging_info "Running $EXEC_FILE_NAME"
         $EXEC_FILE_NAME
     elif [[ -e "$EXEC_FILE_NAME" ]]; then
         logging_status "$module: $EXEC_FILE_NAME exists but is not executable"
-    else
-        BREWFILE_NAME="$DOTFILES_HOME/modules/$module/Brewfile"
+    fi
 
-        if [[ -e "$BREWFILE_NAME" ]]; then
+    # A module's Brewfile is declared state whether or not the module also has a
+    # _setup.zsh.  Bundling only when there was no _setup.zsh meant a module
+    # could declare something that never got installed - the uv module did
+    # exactly that with `brew "uv"`.
+    if [[ -e "$BREWFILE_NAME" ]]; then
+        if brew bundle check --file="$BREWFILE_NAME" >/dev/null 2>&1; then
+            logging_debug "$module: $BREWFILE_NAME already satisfied"
+        else
             logging_info "Bundle $BREWFILE_NAME"
             brew bundle --file="$BREWFILE_NAME"
-        else
-            logging_info "$module: Neither $EXEC_FILE_NAME nor $BREWFILE_NAME exists"
         fi
+    elif [[ ! -e "$EXEC_FILE_NAME" ]]; then
+        logging_info "$module: Neither $EXEC_FILE_NAME nor $BREWFILE_NAME exists"
     fi
 done

@@ -1,0 +1,117 @@
+# Machine-wide Homebrew state for this Mac.
+#
+# Why this file exists
+# --------------------
+# A module owns one application and its config.  This file owns the *brew state
+# of the machine*, so that "what should be installed" lives in exactly one place
+# that can be diffed and checked.  Before this existed the answer was spread
+# across module Brewfiles (26 entries) while 149 things were actually installed,
+# and nothing ever noticed the difference.
+#
+# Per-module Brewfiles may repeat entries here.  That is deliberate and harmless:
+# `brew bundle` is idempotent.  Module Brewfiles stay the place for app-specific
+# config; this file is the machine inventory.
+#
+# Regenerating
+# ------------
+#   brew bundle dump --force --file=~/.dotfiles/modules/homebrew/Brewfile
+# Then re-apply the decisions marked DECISION in this file, and diff before
+# committing.  `dotfiles info` reports drift in both directions.
+#
+# Tap trust (Homebrew 7+)
+# -----------------------
+# Homebrew 7 ignores formulae from third-party taps unless they are trusted, and
+# it does so *silently* - `brew outdated` just shows nothing.  `trusted: true`
+# below is the declarative form of `brew trust --formula <name>` and is applied
+# before any entry is loaded.  Prefer per-formula trust over whole-tap trust:
+# whole-tap trust also accepts all future formulae from that tap.
+
+tap "antoniorodr/memo"
+tap "azure/bicep"
+tap "azure/functions"
+tap "jsontypedef/jsontypedef"
+tap "microsoft/foundrylocal"
+tap "steipete/tap"
+tap "yakitrak/yakitrak"
+
+# Build tooling
+brew "autoconf"
+brew "automake"
+brew "coreutils"
+
+# Version control
+brew "git"
+brew "git-extras"
+brew "diff-so-fancy"
+brew "gh"
+
+# Containers (colima instead of Docker Desktop - see modules/docker)
+brew "docker"
+brew "docker-compose"
+brew "colima"
+
+# Languages and build tools
+brew "deno"
+brew "go"
+brew "gradle"
+brew "maven"
+brew "rust" # ships rustfmt/clippy; there is no standalone rustfmt formula
+brew "uv"
+brew "zig"
+
+# Java
+# DECISION: openjdk@21 is JAVA_HOME; @11 is deprecated upstream and only kept
+# because something still needs it.  openjdk (27) and @25 arrive as dependencies.
+brew "openjdk@11"
+brew "openjdk@21"
+
+# Documents, diagrams, site generation
+brew "graphviz"
+brew "hugo"
+brew "mermaid-cli"
+brew "markdownlint-cli"
+
+# Local LLM stack
+brew "ollama", restart_service: :changed # restarts the daemon so it matches the CLI
+brew "llama.cpp"
+
+# Compilers and toolchains
+brew "llvm" # NOTE: on PATH ahead of /opt/homebrew/bin, sets CPPFLAGS/LDFLAGS
+brew "shellcheck"
+brew "xcodegen"
+brew "entr"
+
+# CLI utilities
+brew "signal-cli"
+brew "opencode"
+
+# DECISION: deprecated by upstream, disabled 2026-12-18, replacement is the
+# `antigravity-cli` cask.  Kept until you decide to switch.
+brew "gemini-cli"
+
+# Azure (see modules/azure-tools)
+brew "azure-cli"
+brew "azure/bicep/bicep", trusted: true
+brew "azure/functions/azure-functions-core-tools@4", trusted: true
+
+# Third-party CLIs (see the tap-trust note above)
+brew "antoniorodr/memo/memo", trusted: true
+brew "jsontypedef/jsontypedef/jtd-codegen", trusted: true
+brew "microsoft/foundrylocal/foundrylocal", trusted: true
+brew "steipete/tap/camsnap", trusted: true
+brew "steipete/tap/gifgrep", trusted: true
+brew "steipete/tap/remindctl", trusted: true
+
+brew "steipete/tap/bird", trusted: true
+
+# Applications
+cask "chatgpt"
+cask "copilot-cli" # self-updating: `brew outdated --greedy` only
+cask "cursor" # self-updating: `brew outdated --greedy` only
+cask "dotnet-sdk"
+cask "ghostty"
+cask "intellij-idea"
+cask "kitty"
+cask "microsoft-edge"
+cask "ngrok"
+cask "visual-studio-code"
