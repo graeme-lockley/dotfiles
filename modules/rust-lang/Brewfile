@@ -1,2 +1,4 @@
 brew "rust"
-brew "rustfmt"
+# rustfmt and clippy ship inside the rust formula - there is no standalone
+# `rustfmt` formula (`brew info rustfmt` resolves to rust through "provides"),
+# so declaring it separately was misleading.
