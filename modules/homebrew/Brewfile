@@ -115,7 +115,6 @@ cask "cursor" # self-updating: `brew outdated --greedy` only
 cask "dotnet-sdk"
 cask "ghostty"
 cask "intellij-idea"
-cask "kitty"
 cask "microsoft-edge"
 cask "ngrok"
 cask "visual-studio-code"
