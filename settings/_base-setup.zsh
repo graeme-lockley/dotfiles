@@ -30,4 +30,6 @@ export DOTFILES_MODULES=(
     microsoft-edge
     intellij
     cursor
+
+    ghostty
 )

@@ -113,7 +113,6 @@ cask "chatgpt"
 cask "copilot-cli" # self-updating: `brew outdated --greedy` only
 cask "cursor" # self-updating: `brew outdated --greedy` only
 cask "dotnet-sdk"
-cask "ghostty"
 cask "intellij-idea"
 cask "microsoft-edge"
 cask "ngrok"

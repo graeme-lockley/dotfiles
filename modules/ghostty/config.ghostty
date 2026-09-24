@@ -1,0 +1,19 @@
+# Ghostty configuration.
+#
+# Symlinked into place by modules/ghostty/_setup.zsh so that every machine
+# shares one config:
+#
+#     ~/.config/ghostty/config.ghostty -> modules/ghostty/config.ghostty
+#
+# The XDG path is the one Ghostty documents as its default, and it is the same
+# path on macOS and Linux - which is what makes a single file work everywhere.
+#
+# One caveat worth remembering: on macOS Ghostty also reads
+#
+#     ~/Library/Application Support/com.mitchellh.ghostty/config.ghostty
+#
+# and where the two disagree, that file wins.  It is kept empty and is not part
+# of this repo, so nothing here can be silently overridden.
+#
+# No settings yet.
+

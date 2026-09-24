@@ -20,11 +20,11 @@ if `$DOTFILES_HOME/bin/is-executable brew`; then
     fi
 
     # The other direction of drift: something installed that nothing declares,
-    # so a rebuilt machine would not have it.
-    UNDECLARED_FORMULAE="$($DOTFILES_HOME/bin/brew-undeclared)"
-    if [[ -n "$UNDECLARED_FORMULAE" ]]; then
+    # so a rebuilt machine would not have it.  Covers formulae and casks both.
+    UNDECLARED_PACKAGES="$($DOTFILES_HOME/bin/brew-undeclared)"
+    if [[ -n "$UNDECLARED_PACKAGES" ]]; then
         echo "${DOTFILES_RED}homebrew:     installed but undeclared:${DOTFILES_NOCOLOUR}"
-        echo "$UNDECLARED_FORMULAE" | sed 's/^/                  /'
+        echo "$UNDECLARED_PACKAGES" | sed 's/^/                  /'
     else
         echo "homebrew:     nothing undeclared"
     fi
