@@ -13,6 +13,5 @@ DOTFILES_MODULES+=(
     jtd-codegen
     rebo-lang
     bendu-lang
-    chatgpt
     ollama
 )
