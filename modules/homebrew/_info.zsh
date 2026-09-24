@@ -28,6 +28,18 @@ if `$DOTFILES_HOME/bin/is-executable brew`; then
     else
         echo "homebrew:     nothing undeclared"
     fi
+
+    # The third direction: trust granted to something no Brewfile declares.
+    # Unlike the two above, a diff cannot show this one going stale, because the
+    # store lives outside the repo - an entry simply outlives the formula it was
+    # granted for.
+    UNDECLARED_TRUST="$($DOTFILES_HOME/bin/brew-trust-undeclared)"
+    if [[ -n "$UNDECLARED_TRUST" ]]; then
+        echo "${DOTFILES_RED}homebrew:     trusted but undeclared:${DOTFILES_NOCOLOUR}"
+        echo "$UNDECLARED_TRUST" | sed 's/^/                  /'
+    else
+        echo "homebrew:     nothing over-trusted"
+    fi
 else
     echo "homebrew:     Not installed"
 fi

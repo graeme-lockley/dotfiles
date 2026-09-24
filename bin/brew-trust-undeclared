@@ -1,0 +1,76 @@
+#!/bin/zsh
+
+# List trusted tap entries that nothing declares.
+#
+# Homebrew 7 refuses to load formulae from third-party taps unless they are
+# trusted, and it does so silently.  The trust store is therefore real state -
+# but it lives outside the repo (`~/.homebrew/trust.json`), so unlike every
+# other package decision it cannot be reviewed by reading the dotfiles.  That is
+# what makes it rot: an entry outlives the thing it trusted, so a formula that
+# is renamed or removed upstream leaves its trust entry behind with nothing to
+# point at.  Anything printed here is that.
+#
+# `brew trust` is the source rather than the JSON file, because that is the
+# documented interface and it does not hard-code the store's location (which
+# moves when XDG_CONFIG_HOME is set).  The `--json=v1` output is pretty-printed
+# one entry per line, so array members are the only lines consisting solely of a
+# quoted string - section keys such as `"taps": [],` cannot match.
+#
+# Matching is deliberately generous, because a trust entry is allowed to be
+# broader than the declaration that justifies it:
+#
+#   * exact match against any declared formula, cask or tap
+#   * leaf match, for a Brewfile that names a formula without its tap prefix
+#   * prefix match, which is the real case in this repo: trusting
+#     `azure/functions/azure-functions-core-tools` is how the versioned
+#     `...-tools@4` is made loadable, so the shorter name is not drift
+#
+# The other direction - a declared tap entry with no valid trust - is reported
+# by Homebrew itself, loudly, when the bundle is read.
+#
+# Two directions of package drift already exist elsewhere; this is the third:
+# `bin/brew-undeclared` covers installed-but-undeclared, `brew bundle check`
+# covers declared-but-not-installed, and this covers trusted-but-undeclared.
+
+. $(dirname $0)/_env.zsh
+
+typeset -a declared declared_leaf
+declared=()
+declared_leaf=()
+
+for brewfile in $DOTFILES_HOME/modules/*/Brewfile; do
+    [[ -e "$brewfile" ]] || continue
+
+    # `|| [[ -n "$kind" ]]` so a final line with no trailing newline is not
+    # dropped - see the same guard in bin/brew-undeclared.
+    while read -r kind name || [[ -n "$kind" ]]; do
+        declared+=("$name")
+        # ${name:t} drops a tap prefix, so a Brewfile may declare the bare name
+        declared_leaf+=("${name:t}")
+    done < <(sed -nE 's/^(brew|cask|tap) "([^"]+)".*/\1 \2/p' $brewfile)
+done
+
+function trust_is_declared() {
+    typeset entry="$1"
+    typeset name
+
+    if (( ${declared[(Ie)$entry]} )); then
+        return 0
+    fi
+
+    if (( ${declared_leaf[(Ie)${entry:t}]} )); then
+        return 0
+    fi
+
+    for name in $declared; do
+        if [[ "$name" == "$entry"* ]]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+for entry in ${(f)"$(brew trust --json=v1 2>/dev/null | sed -nE 's/^ *"([^"]+)",?$/\1/p')"}; do
+    trust_is_declared "$entry" || echo "$entry"
+done
