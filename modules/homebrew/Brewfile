@@ -136,8 +136,6 @@ brew "steipete/tap/camsnap", trusted: true
 brew "steipete/tap/gifgrep", trusted: true
 brew "steipete/tap/remindctl", trusted: true
 
-brew "steipete/tap/bird", trusted: true
-
 # Applications
 # chatgpt, cursor, intellij-idea, microsoft-edge and visual-studio-code belong to
 # their own modules, each enabled on every machine.  dotnet-sdk stays: that
