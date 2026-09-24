@@ -29,7 +29,10 @@ for brewfile in $DOTFILES_HOME/modules/*/Brewfile; do
 
     # Note: not `IFS= read` - an empty IFS turns off field splitting, which
     # would put the whole "brew name" line into kind and leave name empty.
-    while read -r kind name; do
+    # `|| [[ -n "$kind" ]]` matters: `read` returns non-zero when it hits EOF on
+    # a final line with no trailing newline, so a plain `while read` would drop
+    # that entry.  modules/gnu-build-tools/Brewfile was exactly that shape.
+    while read -r kind name || [[ -n "$kind" ]]; do
         # ${name:t} drops a tap prefix so someorg/tap/sometool matches sometool
         case "$kind" in
         brew) declared_formula+=("${name:t}") ;;
