@@ -8,15 +8,31 @@
 # across module Brewfiles (26 entries) while 149 things were actually installed,
 # and nothing ever noticed the difference.
 #
-# Per-module Brewfiles may repeat entries here.  That is deliberate and harmless:
-# `brew bundle` is idempotent.  Module Brewfiles stay the place for app-specific
-# config; this file is the machine inventory.
+# Ownership
+# ---------
+# A package is declared here or in a module, never both:
+#
+#   * a module owns its package when that module is enabled on every machine AND
+#     its _setup.zsh does not need the tool to exist yet - so do not repeat those
+#   * otherwise this file owns it, and any repetition below is deliberate
+#
+# The second case is load-bearing rather than sloppy, and covers three things:
+#
+#   * modules only some machines enable - gnu-build-tools, colima, ollama, ...
+#   * the dormant modules no machine enables yet - docker, graphviz, rust-lang, zig
+#   * ordering.  dotfiles setup runs a module's _setup.zsh *before* bundling that
+#     module's Brewfile, so a _setup.zsh that uses its own tool depends on this
+#     file having installed it earlier.  See the mas, uv and ghostty entries.
 #
 # Regenerating
 # ------------
 #   brew bundle dump --force --file=~/.dotfiles/modules/homebrew/Brewfile
 # Then re-apply the decisions marked DECISION in this file, and diff before
 # committing.  `dotfiles info` reports drift in both directions.
+#
+# A dump writes out everything installed, including packages a module already
+# owns, so prune those too - otherwise the ownership rule above quietly stops
+# holding and the duplication creeps back.
 #
 # Tap trust (Homebrew 7+)
 # -----------------------
@@ -34,35 +50,47 @@ tap "microsoft/foundrylocal"
 tap "steipete/tap"
 tap "yakitrak/yakitrak"
 
-# App Store apps, via mas (see modules/mas).  mas keeps its own inventory of
-# App Store apps (Xcode, Slack, ...) that this Brewfile deliberately does not
-# track - it only says the tool itself must be present.
+# App Store apps, via mas (see modules/mas).  mas keeps its own inventory of App
+# Store apps, declared per machine, which this Brewfile deliberately does not
+# track.
+#
+# mas itself stays here even though modules/mas also declares it: that module's
+# _setup.zsh runs before its own Brewfile is bundled and needs mas to already
+# exist, so removing this entry means setup needs two passes.
 brew "mas"
 
 # Build tooling
+# gnu-build-tools is home-only, so these are declared here rather than left to
+# that module - work machines would otherwise have neither.
 brew "autoconf"
 brew "automake"
 brew "coreutils"
 
 # Version control
-brew "git"
-brew "git-extras"
+# git and git-extras belong to modules/git, which every machine enables and
+# whose _setup.zsh only writes config - it never runs git itself.
 brew "diff-so-fancy"
 brew "gh"
 
 # Containers (colima instead of Docker Desktop - see modules/docker)
+# modules/docker is dormant, and modules/colima and modules/docker-compose are
+# home-only, so this inventory is what puts these on every machine.
 brew "docker"
 brew "docker-compose"
 brew "colima"
 
 # Languages and build tools
-brew "deno"
+# deno belongs to modules/deno, which every machine enables.
 brew "go"
 brew "gradle"
 brew "maven"
-brew "rust" # ships rustfmt/clippy; there is no standalone rustfmt formula
+brew "rust" # modules/rust-lang is dormant; ships rustfmt/clippy, no standalone formula
+brew "zig" # module dormant: nothing enables modules/zig
+#
+# uv stays even though modules/uv declares it: that module's _setup.zsh runs
+# `uv tool install`, and setup runs it before bundling its own Brewfile, so uv
+# must already exist.  Its absence is why that entry was silently skipped once.
 brew "uv"
-brew "zig"
 
 # Java
 # DECISION: openjdk@21 is JAVA_HOME; @11 is deprecated upstream and only kept
@@ -71,19 +99,18 @@ brew "openjdk@11"
 brew "openjdk@21"
 
 # Documents, diagrams, site generation
-brew "graphviz"
+brew "graphviz" # module dormant: nothing enables modules/graphviz
 brew "hugo"
 brew "mermaid-cli"
-brew "markdownlint-cli"
+# markdownlint-cli is not here: modules/markdownlint-cli owns it, on every machine.
 
 # Local LLM stack
-brew "ollama", restart_service: :changed # restarts the daemon so it matches the CLI
+brew "ollama", restart_service: :changed # modules/ollama is home-only; the restart decision lives here
 brew "llama.cpp"
 
 # Compilers and toolchains
-brew "shellcheck"
+# shellcheck and entr belong to their own modules, enabled on every machine.
 brew "xcodegen"
-brew "entr"
 
 # CLI utilities
 brew "signal-cli"
@@ -100,6 +127,8 @@ brew "azure/functions/azure-functions-core-tools@4", trusted: true
 
 # Third-party CLIs (see the tap-trust note above)
 brew "antoniorodr/memo/memo", trusted: true
+# modules/jtd-codegen is home-only, and per-formula tap trust is a decision kept
+# here rather than there, so this entry stays.
 brew "jsontypedef/jsontypedef/jtd-codegen", trusted: true
 brew "microsoft/foundrylocal/foundrylocal", trusted: true
 brew "steipete/tap/camsnap", trusted: true
@@ -109,11 +138,13 @@ brew "steipete/tap/remindctl", trusted: true
 brew "steipete/tap/bird", trusted: true
 
 # Applications
-cask "chatgpt"
+# chatgpt, cursor, intellij-idea, microsoft-edge and visual-studio-code belong to
+# their own modules, each enabled on every machine.  dotnet-sdk stays: that
+# module is home-only.
 cask "copilot-cli" # self-updating: `brew outdated --greedy` only
-cask "cursor" # self-updating: `brew outdated --greedy` only
 cask "dotnet-sdk"
-cask "intellij-idea"
-cask "microsoft-edge"
+# ghostty must be installed before modules/ghostty/_setup.zsh runs, because that
+# script proves the config is read by asking ghostty itself, and setup runs a
+# module's _setup.zsh before bundling its own Brewfile.  So the app comes here.
+cask "ghostty"
 cask "ngrok"
-cask "visual-studio-code"

@@ -14,6 +14,14 @@
 #
 # and where the two disagree, that file wins.  It is kept empty and is not part
 # of this repo, so nothing here can be silently overridden.
-#
-# No settings yet.
 
+# Canary - this is what proves the setup worked.
+#
+# Ghostty lists only the settings that differ from its defaults, so a non-default
+# value appearing in `ghostty +show-config` is evidence the file really was read,
+# not merely linked.  modules/ghostty/_info.zsh compares this value against what
+# Ghostty reports, and `dotfiles info` shows the verdict.
+#
+# Keep it different from Ghostty's default (font-size 13) or the check cannot see
+# it.  The size itself is just a preference - change it and the canary follows.
+font-size = 15
