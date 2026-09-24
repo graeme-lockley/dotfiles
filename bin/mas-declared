@@ -1,0 +1,99 @@
+#!/bin/zsh
+
+# Report the App Store apps declared by the machine's install list.
+#
+# Why this exists
+# ---------------
+# `mas` needs root, so every path that reaches it costs a password.  Homebrew's
+# own `mas "Name", id: N` entries cannot take that cost away the way you would
+# hope: brew bundle insists the id is an integer, so it can never work one out
+# for you, and it reaches mas once per entry.  This script is the glue that
+# resolves ids locally and reports state, so its two callers can each do the
+# right thing: `dotfiles info` reports, and `dotfiles setup` batches.
+#
+# Declaration
+# -----------
+# An App Store app belongs to one machine, so it is declared in that machine's
+# settings file - the machine's install list - rather than in a module:
+#
+#     DOTFILES_APPSTORE=( Slack Telegram )
+#
+# A name on its own is enough.  The id is the annoying thing to look up, so it
+# is optional and is resolved from `mas list` - local, needing neither network
+# nor password - for apps that are already installed.  That is the deal this
+# file is built around: install once by hand, declare it by name, and never look
+# the id up again.  Append an id only to pin one:
+#
+#     DOTFILES_APPSTORE+=( "Xcode 497799835" )
+#
+# Output
+# ------
+# Tab separated, one line per declared app:
+#
+#     state <TAB> name <TAB> id
+#
+# The id is deliberately LAST.  Tab is IFS whitespace, so an empty field
+# anywhere but the end collapses and shifts every field after it - which is
+# exactly what happens for an app whose id could not be resolved.
+#
+# state is one of:
+#   outdated  installed and a newer version is available
+#   current   installed and up to date
+#   missing   declared with an id, but not installed - install it once by hand
+#   unknown   declared by name, no id resolved, so not installed
+
+. $(dirname $0)/_env.zsh
+
+typeset -A id_of_name installed_id outdated_id
+
+if $DOTFILES_HOME/bin/is-executable mas; then
+    # `mas list` prints "id  name  (version)".  The name may contain spaces
+    # ("Numbers Creator Studio"), so strip the leading id and the trailing
+    # version rather than splitting on whitespace.
+    while IFS=$'\t' read -r id name; do
+        [[ -n "$id" ]] || continue
+        installed_id[$id]=1
+        id_of_name[$name]=$id
+    done < <(mas list 2>/dev/null | awk '
+        {
+            id = $1
+            name = $0
+            sub(/^[ \t]*[0-9]+[ \t]+/, "", name)
+            sub(/[ \t]*\([^)]*\)[ \t]*$/, "", name)
+            sub(/[ \t]+$/, "", name)
+            print id "\t" name
+        }')
+
+    # `mas outdated` prints "id  name  (old -> new)".
+    while IFS=$'\t' read -r id _; do
+        [[ -n "$id" ]] || continue
+        outdated_id[$id]=1
+    done < <(mas outdated 2>/dev/null | awk '{ print $1 "\t" }')
+fi
+
+# An unset list on a machine that has declared no App Store apps is normal.
+for entry in $DOTFILES_APPSTORE; do
+    # A trailing word that is all digits is an id; anything else is part of
+    # the name.
+    name="$entry"
+    id=""
+    if [[ "$entry" == *[[:space:]]* && "${entry##*[[:space:]]}" == <-> ]]; then
+        id="${entry##*[[:space:]]}"
+        name="${entry%[[:space:]]*}"
+    fi
+
+    # No id given: work it out from what is already installed.
+    [[ -n "$id" ]] || id="${id_of_name[$name]}"
+
+    if [[ -z "$id" ]]; then
+        printf 'unknown\t%s\t\n' "$name"
+    elif (( ${+installed_id[$id]} )); then
+        if (( ${+outdated_id[$id]} )); then
+            printf 'outdated\t%s\t%s\n' "$name" "$id"
+        else
+            printf 'current\t%s\t%s\n' "$name" "$id"
+        fi
+    else
+        printf 'missing\t%s\t%s\n' "$name" "$id"
+    fi
+done

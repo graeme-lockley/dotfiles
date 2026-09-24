@@ -32,6 +32,22 @@ If you are reading this and you are not me then feel free to copy my long-term m
 
 Homebrew refuses to install any formula that has no bottle when the Command Line Tools are older than the OS, because those entries get built from source.  That is a hard gate rather than a warning, and there is no bypass short of updating the tools.  `dotfiles setup` reports it and carries on instead of abandoning the remaining modules.
 
+## App Store
+
+`mas` is brew's counterpart for the App Store, and it needs root - so the whole design here is about paying for a password as few times as possible.
+
+- **The machine's install list declares its App Store apps**, in `settings/_<machine>.zsh`:
+
+      DOTFILES_APPSTORE=( Slack Telegram )
+
+  An App Store app is not an application to be configured, it is a line in what a single machine should have, so it belongs with the modules that machine enables rather than beside them.  `modules/mas` owns the mechanism and never needs to know which apps any machine has.
+- **The id is optional.**  It is the annoying thing to look up, so it is resolved from `mas list` - local, no network, no password - for apps that are already installed.  Install once by hand, declare it by name, and then never look the id up again.  An id may be appended to pin one.
+- **Nothing to upgrade means no password at all.**  `dotfiles setup` reaches `sudo` only when something is genuinely out of date, and then upgrades every outdated app in a single call rather than one call per app.
+- **`mas` cannot install an app the account has not already "got"**, so a declared-but-absent app is never a silent failure.  Setup names it and gives the one command to run by hand; silence there would mean the machine quietly differed from its declaration.
+- **`dotfiles info` reports drift but never prompts.**  Reporting and acting are deliberately separated, so asking about the state of the machine never costs a password.
+- **This is not done through `brew bundle`.**  Homebrew's own `mas "Name", id: N` entries look like the answer, but the id must be an integer, so brew can never work one out for you, and it reaches mas once per entry.  `bin/mas-declared` is the glue that resolves ids locally, reports state, and lets the two callers do the right thing - one reports, the other batches.
+- **The App Store updates itself anyway**, so this is a nudge rather than the only route: Slack and Telegram were quietly brought up to date in the background once already, between two runs of the same command.
+
 ## See also
 
 - [The ZShell Manual](https://zsh.sourceforge.io/Doc/Release/zsh_toc.html) because `zsh` is awesome and powerful and misunderstood - *what do you mean my Ferrari has more than 1 gear - WOW!*
