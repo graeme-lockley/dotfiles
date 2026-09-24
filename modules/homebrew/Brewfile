@@ -34,6 +34,11 @@ tap "microsoft/foundrylocal"
 tap "steipete/tap"
 tap "yakitrak/yakitrak"
 
+# App Store apps, via mas (see modules/mas).  mas keeps its own inventory of
+# App Store apps (Xcode, Slack, ...) that this Brewfile deliberately does not
+# track - it only says the tool itself must be present.
+brew "mas"
+
 # Build tooling
 brew "autoconf"
 brew "automake"
