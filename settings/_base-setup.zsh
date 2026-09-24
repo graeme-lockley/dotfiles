@@ -12,6 +12,7 @@ export DOTFILES_MODULES=(
     entr
 
     java
+    gradle
 
     chatgpt
     

@@ -80,9 +80,8 @@ brew "docker-compose"
 brew "colima"
 
 # Languages and build tools
-# deno belongs to modules/deno, which every machine enables.
+# deno and gradle belong to their own modules, both enabled on every machine.
 brew "go"
-brew "gradle"
 brew "maven"
 brew "rust" # modules/rust-lang is dormant; ships rustfmt/clippy, no standalone formula
 brew "zig" # module dormant: nothing enables modules/zig
