@@ -2,23 +2,39 @@
 
 # List installed packages that nothing declares.
 #
-# `brew list --installed-on-request` is the set of formulae installed on purpose
-# rather than as a dependency of something else.  Every one of those should be
-# declared in a Brewfile, otherwise a machine rebuilt from these dotfiles would
-# not have it.  Anything printed here is drift.
+# Every package installed on purpose - rather than pulled in as a dependency -
+# should be declared in a Brewfile, otherwise a machine rebuilt from these
+# dotfiles would not have it.  Anything printed here is drift.
 #
-# Casks need handling of their own, and getting it wrong is silent: Homebrew
-# records no "installed on request" flag for casks, and
-# `brew list --installed-on-request --cask` is not a valid combination - it
-# prints usage rather than failing, so the mistake looks like an empty result.
-# Casks are therefore compared against every installed cask.  Without this half
-# of the comparison, a cask could be dropped from a Brewfile and the app left
-# installed would go unnoticed - exactly the drift this script exists to find.
+# Where "installed on purpose" comes from
+# ---------------------------------------
+# Each keg's own receipt (`Cellar/<name>/<version>/INSTALL_RECEIPT.json`), not
+# `brew list --installed-on-request`.  That command resolves every installed
+# name through its tap, and Homebrew 7 ignores formulae from untrusted taps
+# *silently* - so a formula from an untrusted tap is dropped from the list
+# entirely, and exit status stays 0.  The drift check was therefore blind to
+# exactly the packages most likely to be forgotten, and it was not theoretical:
+# an installed, undeclared formula stayed invisible for as long as its tap
+# stayed untrusted.
 #
-# Two directions of drift exist; this is the "installed but undeclared" one.
-# The other ("declared but not installed") is `brew bundle check`.
+# Receipts are local files, so nothing can hide from them.  This is also the
+# same data Homebrew itself uses to decide what "on request" means.
+#
+# Casks are different: Homebrew records no "on request" flag for them, and
+# `brew list --installed-on-request --cask` is not a valid combination (it
+# prints usage rather than failing).  So casks are compared against every
+# installed cask.  Without that half, a cask could be dropped from a Brewfile
+# and the still-installed app would go unnoticed.
+#
+# Three directions of drift exist.  This is "installed but undeclared";
+# `brew bundle check` covers "declared but not installed", and
+# `bin/brew-trust-undeclared` covers "trusted but undeclared".
 
 . $(dirname $0)/_env.zsh
+
+if ! $DOTFILES_HOME/bin/is-executable brew; then
+    exit 0
+fi
 
 typeset -a declared_formula declared_cask
 declared_formula=()
@@ -27,8 +43,6 @@ declared_cask=()
 for brewfile in $DOTFILES_HOME/modules/*/Brewfile; do
     [[ -e "$brewfile" ]] || continue
 
-    # Note: not `IFS= read` - an empty IFS turns off field splitting, which
-    # would put the whole "brew name" line into kind and leave name empty.
     # `|| [[ -n "$kind" ]]` matters: `read` returns non-zero when it hits EOF on
     # a final line with no trailing newline, so a plain `while read` would drop
     # that entry.  modules/gnu-build-tools/Brewfile was exactly that shape.
@@ -41,9 +55,20 @@ for brewfile in $DOTFILES_HOME/modules/*/Brewfile; do
     done < <(sed -nE 's/^(brew|cask) "([^"]+)".*/\1 \2/p' $brewfile)
 done
 
-# Formulae: only those installed on purpose.  A dependency is pulled in by
-# whatever depends on it, so it does not need declaring.
-for leaf in ${(f)"$(brew list --installed-on-request --formula 2>/dev/null)"}; do
+typeset CELLAR="$(brew --cellar)"
+typeset -A installed_on_request
+installed_on_request=()
+
+for receipt in "$CELLAR"/*/*/INSTALL_RECEIPT.json(N); do
+    # .../<cellar>/<name>/<version>/INSTALL_RECEIPT.json
+    typeset kay="${${receipt:h}:h}"
+
+    if grep -q '"installed_on_request": *true' "$receipt"; then
+        installed_on_request[${kay:t}]=1
+    fi
+done
+
+for leaf in ${(ok)installed_on_request}; do
     if (( ! ${declared_formula[(Ie)$leaf]} )); then
         echo "$leaf"
     fi
