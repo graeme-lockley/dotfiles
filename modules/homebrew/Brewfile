@@ -76,7 +76,6 @@ brew "ollama", restart_service: :changed # restarts the daemon so it matches the
 brew "llama.cpp"
 
 # Compilers and toolchains
-brew "llvm" # NOTE: on PATH ahead of /opt/homebrew/bin, sets CPPFLAGS/LDFLAGS
 brew "shellcheck"
 brew "xcodegen"
 brew "entr"
