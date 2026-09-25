@@ -92,12 +92,17 @@ brew "zig" # module dormant: nothing enables modules/zig
 brew "uv"
 
 # Java
-# DECISION: exactly one JDK is managed here - openjdk, currently 27.  It is what
-# modules/java points JAVA_HOME at, and the only JVM macOS registers.
+# DECISION: two JDKs are managed here.  openjdk (currently 27) is the default -
+# it is what modules/java points JAVA_HOME at and the JVM that /usr/bin/java
+# finds.  openjdk@21 is registered beside it because Gradle toolchains look for
+# it locally: java-chat pins jvmToolchain(21), and without a registered JDK 21
+# Gradle downloads one for itself.
 # openjdk@25 is deliberately not managed: it arrives as a dependency of gradle.
-# Note maven also depends on openjdk, so this entry is not what installs that
-# JDK - it is here so that the JDK in use is declared rather than incidental.
+# Note maven also depends on openjdk, so that entry is not what installs the
+# default JDK - it is here so that the default JDK is declared rather than
+# incidental.
 brew "openjdk"
+brew "openjdk@21"
 
 # Documents, diagrams, site generation
 brew "graphviz" # module dormant: nothing enables modules/graphviz
