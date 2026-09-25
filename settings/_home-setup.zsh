@@ -2,6 +2,7 @@
 
 DOTFILES_MODULES+=(
     gnu-build-tools
+    llvm
 
 #    emscripten
 
@@ -14,4 +15,6 @@ DOTFILES_MODULES+=(
     rebo-lang
     bendu-lang
     ollama
+
+    bun
 )
