@@ -48,6 +48,14 @@ Homebrew refuses to install any formula that has no bottle when the Command Line
 - **This is not done through `brew bundle`.**  Homebrew's own `mas "Name", id: N` entries look like the answer, but the id must be an integer, so brew can never work one out for you, and it reaches mas once per entry.  `bin/mas-declared` is the glue that resolves ids locally, reports state, and lets the two callers do the right thing - one reports, the other batches.
 - **The App Store updates itself anyway**, so this is a nudge rather than the only route: Slack and Telegram were quietly brought up to date in the background once already, between two runs of the same command.
 
+## Root and sudo
+
+Two modules need root: `mas` (App Store upgrades) and `java` (the JVM symlinks in `/Library/Java/JavaVirtualMachines`).  Both are built to pay for the password as little as possible, and `dotfiles setup` ties them together so the whole run costs at most one prompt.
+
+- **A settled machine costs no password at all.**  The java module repairs only links that are actually wrong, so once `openjdk.jdk` and `openjdk-21.jdk` point where they should it runs no `sudo`; the mas module reaches `sudo` only when an app is genuinely out of date.  This is the common case.
+- **One password covers the whole run when root is needed.**  sudo caches a credential per terminal for five minutes (`timestamp_timeout`), and `brew upgrade` alone can outlast that - which is why the password was asked for again part-way through.  `dotfiles setup` refreshes the cached ticket in the background once it exists.  The refresh uses `sudo -n`, which never prompts, so a run that needs no root still asks for nothing: until the first module authenticates, the loop fails in silence.  A trap kills it on exit, interrupt or termination.
+- **Each module batches its own root work.**  java collects every `ln` and `rm` into a single root shell rather than one `sudo` per link; mas upgrades every outdated app in one call.  The keep-alive is what makes those batches add up to one prompt instead of several.
+
 ## See also
 
 - [The ZShell Manual](https://zsh.sourceforge.io/Doc/Release/zsh_toc.html) because `zsh` is awesome and powerful and misunderstood - *what do you mean my Ferrari has more than 1 gear - WOW!*

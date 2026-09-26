@@ -6,6 +6,27 @@ dotfiles_verify_settings
 
 export DOTFILES_VERBOSE=1
 
+# sudo caches credentials per terminal for `timestamp_timeout` (five minutes by
+# default).  A full setup can easily outlast that - `brew upgrade` alone can
+# take a while - which is why the password was asked for again part-way
+# through.  Refresh the cache in the background once it exists.
+#
+# `sudo -n` never prompts, so a setup that needs no root still asks for no
+# password: until the first module authenticates, this loop fails in silence.
+# A ticket is per-terminal, and this loop shares the terminal with every module
+# it starts, so one authentication covers the rest of the run.
+typeset SUDO_KEEPALIVE_PID
+while true; do
+    sudo -n -v 2>/dev/null
+    sleep 30
+done &
+SUDO_KEEPALIVE_PID=$!
+
+cleanup_sudo_keepalive() {
+    kill "$SUDO_KEEPALIVE_PID" 2>/dev/null
+}
+trap cleanup_sudo_keepalive EXIT INT TERM HUP
+
 for module in $DOTFILES_MODULES; do
     EXEC_FILE_NAME="$DOTFILES_HOME/modules/$module/_setup.zsh"
     BREWFILE_NAME="$DOTFILES_HOME/modules/$module/Brewfile"
